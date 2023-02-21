@@ -1,6 +1,6 @@
 parameters:
-    command: 'foo'
+    command: ''
 
 steps:
-- script: echo Hello, world! Here is your command: ${{ parameters.command }}
+- script: echo Hello, world! Here is your command ${{ parameters.command }}
   displayName: 'Run a one-line script'
