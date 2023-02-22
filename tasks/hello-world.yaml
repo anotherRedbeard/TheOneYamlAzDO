@@ -3,4 +3,4 @@ parameters:
 
 steps:
 - script: echo Hello, world! Here is your command ${{ parameters.command }}
-  displayName: 'Run-a-one-line-script'
+  displayName: 'Run a one-line script'
