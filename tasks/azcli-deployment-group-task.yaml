@@ -33,4 +33,4 @@ steps:
     scriptLocation: inlineScript
     inlineScript: |
       az --version
-      'az deployment group ${{ parameters.command }} -l ${{ parameters.location }} --resource-group ${{ parameters.resourceGroupName }} -n ${{ parameters.deploymentName }} --template-file ${{parameters.templateFileName}} --parameters ${{parameters.parametersFileName}} ${{ parameters.additionalArguments }}'
+      az deployment group ${{ parameters.command }} -l ${{ parameters.location }} --resource-group ${{ parameters.resourceGroupName }} -n ${{ parameters.deploymentName }} --template-file ${{parameters.templateFileName}} --parameters ${{parameters.parametersFileName}} ${{ parameters.additionalArguments }}
