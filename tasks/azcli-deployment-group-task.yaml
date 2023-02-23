@@ -20,18 +20,14 @@ parameters:
 - name: deploymentName
   type: string
   default: 'azureADOCLIDeployment'
-- name: createResourceGroup
-  type: boolean
-  default: true
 
 steps:
 - task: AzureCLI@2
-  displayName: '${{ parameters.command }} bicep'
+  displayName: 'az deployment group ${{ parameters.command }} command'
   inputs:
     azureSubscription: ${{ parameters.azureSubscriptionName }}
     scriptType: bash
     scriptLocation: inlineScript
     inlineScript: |
       az --version
-      az group create -l ${{ parameters.location }} -n ${{ parameters.resourceGroupName}}
       az deployment group ${{ parameters.command }} -l ${{ parameters.location }} -n ${{ parameters.deploymentName }} --template-file ${{parameters.templateFileName}} --parameters ${{parameters.parametersFileName}} ${{ parameters.additionalArguments }}

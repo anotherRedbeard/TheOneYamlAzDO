@@ -1,0 +1,24 @@
+parameters:
+- name: azureSubscriptionName
+  type: string
+  default: ''
+- name: location
+  type: string
+  default: 'CentralUS'
+- name: resourceGroupName
+  type: string
+  default: ''
+- name: command
+  type: string
+  default: 'create'
+
+steps:
+- task: AzureCLI@2
+  displayName: 'az group ${{ parameters.command }} command'
+  inputs:
+    azureSubscription: ${{ parameters.azureSubscriptionName }}
+    scriptType: bash
+    scriptLocation: inlineScript
+    inlineScript: |
+      az --version
+      az group create -l ${{ parameters.location }} -n ${{ parameters.resourceGroupName}}
