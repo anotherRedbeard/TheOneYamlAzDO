@@ -11,6 +11,9 @@ parameters:
 - name: command
   type: string
   default: 'create'
+- name: additionalArguments
+  type: string
+  default: ''
 
 steps:
 - task: AzureCLI@2
@@ -21,4 +24,4 @@ steps:
     scriptLocation: inlineScript
     inlineScript: |
       az --version
-      az group create -l ${{ parameters.location }} -n ${{ parameters.resourceGroupName}}
+      az group create -l ${{ parameters.location }} -n ${{ parameters.resourceGroupName}} ${{ parameters.additionalArguments }}
