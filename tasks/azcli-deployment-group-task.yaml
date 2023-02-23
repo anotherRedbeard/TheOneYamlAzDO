@@ -20,6 +20,9 @@ parameters:
 - name: deploymentName
   type: string
   default: 'azureADOCLIDeployment'
+- name: resourceGroupName
+  type: string
+  default: ''
 
 steps:
 - task: AzureCLI@2
@@ -30,4 +33,4 @@ steps:
     scriptLocation: inlineScript
     inlineScript: |
       az --version
-      az deployment group ${{ parameters.command }} -l ${{ parameters.location }} -n ${{ parameters.deploymentName }} --template-file ${{parameters.templateFileName}} --parameters ${{parameters.parametersFileName}} ${{ parameters.additionalArguments }}
+      az deployment group ${{ parameters.command }} -l ${{ parameters.location }} -g ${{ parameters.resourceGroupName }} -n ${{ parameters.deploymentName }} --template-file ${{parameters.templateFileName}} --parameters ${{parameters.parametersFileName}} ${{ parameters.additionalArguments }}
