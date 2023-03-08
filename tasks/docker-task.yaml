@@ -1,0 +1,26 @@
+parameters:
+- name: azureContainerRegistryName
+  type: string
+  default: ''
+- name: repositoryName
+  type: string
+  default: ''
+- name: dockerfileLocation
+  type: string
+  default: './Dockerfile'
+- name: command
+  type: string
+  default: 'buildAndPush'
+- name: tags
+  type: string
+  default: ''
+
+steps:
+- task: Docker@2
+  displayName: 'docker ${{ parameters.command }} command'
+  inputs:
+    containerRegistry: ${{ parameters.azureContainerRegistryName }}
+    repository: ${{ parameters.repositoryName }}
+    command: ${{ parameters.command }}
+    Dockerfile: ${{ dockerfileLocation }}
+    tags: ${{ parameters.tags }}
