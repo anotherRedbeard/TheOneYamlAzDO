@@ -22,5 +22,5 @@ steps:
     containerRegistry: ${{ parameters.azureContainerRegistryName }}
     repository: ${{ parameters.repositoryName }}
     command: ${{ parameters.command }}
-    Dockerfile: ${{ dockerfileLocation }}
+    Dockerfile: ${{ parameters.dockerfileLocation }}
     tags: ${{ parameters.tags }}
