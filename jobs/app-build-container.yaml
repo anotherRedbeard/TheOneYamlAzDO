@@ -1,0 +1,40 @@
+parameters:
+- name: environmentName
+  type: string
+- name: serviceName
+  type: string
+- name: regionAbrv
+  type: string
+- name: azureContainerRegistryName
+  type: string
+- name: containerImageName
+  type: string
+- name: version
+  type: string
+- name: dockerFilePath
+  type: string
+
+jobs:
+  - deployment: '${{ parameters.serviceName }}_container_${{ parameters.environmentName }}_${{ parameters.regionAbrv }}'
+    environment: ${{ parameters.environmentName }}
+    variables: 
+      - name: imageTag
+        value: '${{ parameters.version }}.$(Build.BuildNumber)'
+    pool:
+      vmImage: ubuntu-latest
+    strategy:
+      runOnce:
+          deploy:
+
+            steps:
+            - checkout: self
+    
+            - template: ../tasks/docker-task.yaml
+              parameters:
+                azureContainerRegistryName: '${{ parameters.azureContainerRegistryConnection }}'
+                repositoryName: '${{ parameters.containerImageName }}'
+                command: 'buildAndPush'
+                dockerfileLocation: '${{ parameters.dockerFilePath }}/Dockerfile'
+                tags: |
+                  $(imageTag)
+                  latest
