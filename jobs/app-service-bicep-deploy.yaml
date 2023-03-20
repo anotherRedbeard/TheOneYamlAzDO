@@ -1,1 +1,54 @@
-tst
+parameters:
+- name: environmentName
+  type: string
+- name: templateFileName
+  type: string
+- name: templateDirectory
+  type: string
+- name: serviceName
+  type: string
+- name: regionAbrv
+  type: string
+- name: azureServiceConnection
+  type: string
+- name: location
+  type: string
+- name: resourceGroupName
+  type: string
+
+jobs:
+  - deployment: '${{ parameters.serviceName }}_infrastructure_${{ parameters.environmentName }}_${{ parameters.regionAbrv }}'
+    environment: ${{ parameters.environmentName }}
+    variables: 
+      - name: deploymentName
+        value: '${{ parameters.serviceName }}_infrastructure_${{ parameters.environmentName }}_${{ parameters.regionAbrv }}'
+    pool:
+      vmImage: ubuntu-latest
+    strategy:
+      runOnce:
+          deploy:
+
+            steps:
+            - checkout: self
+
+            - template: ../tasks/hello-world.yaml
+              parameters:
+                command: $(Build.BuildNumber)
+            
+            - template: ../tasks/azcli-group-task.yaml
+              parameters:
+                azureSubscriptionName: '${{ parameters.azureServiceConnection}}'
+                location: '${{ parameters.location }}'
+                command: 'create'
+                resourceGroupName: '${{ parameters.resourceGroupName }}'
+
+            - template: ../tasks/azcli-deployment-group-task.yaml
+              parameters:
+                azureSubscriptionName: '${{ parameters.azureServiceConnection}}'
+                location: '${{ parameters.location }}'
+                templateFileName: '$(Build.SourcesDirectory)/${{ parameters.templateDirectory }}/${{ parameters.templateFileName }}.bicep'
+                parametersFileName: '$(Build.SourcesDirectory)/${{ parameters.templateDirectory }}/parameters/${{ parameters.environmentName }}.${{ parameters.regionAbrv }}.${{ parameters.templateFileName }}.parameters.json'
+                command: 'create'
+                additionalArguments: '--out yamlc'
+                deploymentName: '${{ variables.deploymentName }}'
+                resourceGroupName: '${{ parameters.resourceGroupName }}'

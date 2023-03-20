@@ -1,0 +1,9 @@
+variables:
+  - name: azureServiceConnectionName
+    value: 'AppServiceDeploymentDemo'
+  - name: location
+    value: 'sourthcentralus'
+  - name: resourceGroupName
+    value: 'red-scus-appservicedemo-dev'
+  - name: templateFileName
+    value: 'main-deploy-app-service'
