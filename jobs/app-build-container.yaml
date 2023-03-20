@@ -31,7 +31,7 @@ jobs:
     
             - template: ../tasks/docker-task.yaml
               parameters:
-                azureContainerRegistryName: '${{ parameters.azureContainerRegistryConnection }}'
+                azureContainerRegistryName: '${{ parameters.azureContainerRegistryName }}'
                 repositoryName: '${{ parameters.containerImageName }}'
                 command: 'buildAndPush'
                 dockerfileLocation: '${{ parameters.dockerFilePath }}/Dockerfile'
