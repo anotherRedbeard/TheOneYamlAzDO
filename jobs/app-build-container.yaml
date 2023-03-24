@@ -33,5 +33,5 @@ jobs:
                 command: 'buildAndPush'
                 dockerfileLocation: '${{ parameters.dockerFilePath }}/Dockerfile'
                 tags: |
-                  $(imageTagName)
+                  ${{ parameters.imageTagName }}
                   latest
