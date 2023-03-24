@@ -9,7 +9,7 @@ parameters:
   type: string
 - name: containerImageName
   type: string
-- name: version
+- name: imageTagName
   type: string
 - name: dockerFilePath
   type: string
@@ -17,9 +17,6 @@ parameters:
 jobs:
   - deployment: '${{ parameters.serviceName }}_container_${{ parameters.environmentName }}_${{ parameters.regionAbrv }}'
     environment: ${{ parameters.environmentName }}
-    variables: 
-      - name: imageTag
-        value: '${{ parameters.version }}.$(Build.BuildNumber)'
     pool:
       vmImage: ubuntu-latest
     strategy:
@@ -36,5 +33,5 @@ jobs:
                 command: 'buildAndPush'
                 dockerfileLocation: '${{ parameters.dockerFilePath }}/Dockerfile'
                 tags: |
-                  $(imageTag)
+                  $(imageTagName)
                   latest
