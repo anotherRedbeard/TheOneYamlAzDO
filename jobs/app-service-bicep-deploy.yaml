@@ -46,7 +46,6 @@ jobs:
             - template: ../tasks/azcli-deployment-group-task.yaml
               parameters:
                 azureSubscriptionName: '${{ parameters.azureServiceConnection}}'
-                location: '${{ parameters.location }}'
                 templateFileName: '$(Build.SourcesDirectory)/${{ parameters.templateDirectory }}/${{ parameters.templateFileName }}.bicep'
                 parametersFileName: '$(Build.SourcesDirectory)/${{ parameters.templateDirectory }}/parameters/${{ parameters.environmentName }}.${{ parameters.regionAbrv }}.${{ parameters.templateFileName }}.parameters.json'
                 command: 'create'
