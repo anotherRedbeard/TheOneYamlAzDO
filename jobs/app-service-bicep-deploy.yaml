@@ -14,15 +14,13 @@ parameters:
 - name: resourceGroupName
   type: string
 
-variables:
-  template: ../variables/azure-global-variables.yaml
-
 jobs:
   - deployment: '${{ parameters.serviceName }}_infrastructure_${{ parameters.environmentName }}_${{ parameters.regionAbrv }}'
     environment: ${{ parameters.environmentName }}
     variables: 
       - name: deploymentName
         value: '${{ parameters.serviceName }}_infrastructure_${{ parameters.environmentName }}_${{ parameters.regionAbrv }}'
+      - template: ../variables/azure-global-variables.yaml
     pool:
       vmImage: ubuntu-latest
     strategy:
