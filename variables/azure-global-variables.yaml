@@ -1,6 +1,2 @@
 variables:
-  regionToLocationMapping:
-    scus: southcentralus
-    cus: centralus
-    eus2: eastus2
   webAppAbrv: app

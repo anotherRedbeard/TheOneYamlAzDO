@@ -9,6 +9,8 @@ parameters:
   type: string
 - name: regionAbrv
   type: string
+- name: location
+  type: string
 - name: azureServiceConnection
   type: string
 - name: resourceGroupName
@@ -37,14 +39,14 @@ jobs:
             - template: ../tasks/azcli-group-task.yaml
               parameters:
                 azureSubscriptionName: '${{ parameters.azureServiceConnection}}'
-                location: '${{ variables.regionToLocationMapping[parameters.regionAbrv] }}'
+                location: '${{ parameters.location }}'
                 command: 'create'
                 resourceGroupName: '${{ parameters.resourceGroupName }}'
 
             - template: ../tasks/azcli-deployment-group-task.yaml
               parameters:
                 azureSubscriptionName: '${{ parameters.azureServiceConnection}}'
-                location: '${{ variables.regionToLocationMapping[parameters.regionAbrv] }}'
+                location: '${{ parameters.location }}'
                 templateFileName: '$(Build.SourcesDirectory)/${{ parameters.templateDirectory }}/${{ parameters.templateFileName }}.bicep'
                 parametersFileName: '$(Build.SourcesDirectory)/${{ parameters.templateDirectory }}/parameters/${{ parameters.environmentName }}.${{ parameters.regionAbrv }}.${{ parameters.templateFileName }}.parameters.json'
                 command: 'create'
