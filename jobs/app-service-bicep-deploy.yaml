@@ -11,10 +11,11 @@ parameters:
   type: string
 - name: azureServiceConnection
   type: string
-- name: location
-  type: string
 - name: resourceGroupName
   type: string
+
+variables:
+  - template: ../variables/azure-global-variables.yaml
 
 jobs:
   - deployment: '${{ parameters.serviceName }}_infrastructure_${{ parameters.environmentName }}_${{ parameters.regionAbrv }}'
@@ -38,14 +39,14 @@ jobs:
             - template: ../tasks/azcli-group-task.yaml
               parameters:
                 azureSubscriptionName: '${{ parameters.azureServiceConnection}}'
-                location: '${{ parameters.location }}'
+                location: '${{ variables.regionToLocationMapping[parameters.regionAbrv] }}'
                 command: 'create'
                 resourceGroupName: '${{ parameters.resourceGroupName }}'
 
             - template: ../tasks/azcli-deployment-group-task.yaml
               parameters:
                 azureSubscriptionName: '${{ parameters.azureServiceConnection}}'
-                location: '${{ parameters.location }}'
+                location: '${{ variables.regionToLocationMapping[parameters.regionAbrv] }}'
                 templateFileName: '$(Build.SourcesDirectory)/${{ parameters.templateDirectory }}/${{ parameters.templateFileName }}.bicep'
                 parametersFileName: '$(Build.SourcesDirectory)/${{ parameters.templateDirectory }}/parameters/${{ parameters.environmentName }}.${{ parameters.regionAbrv }}.${{ parameters.templateFileName }}.parameters.json'
                 command: 'create'
