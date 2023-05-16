@@ -15,7 +15,7 @@ parameters:
   type: string
 
 variables:
-  - template: ../variables/azure-global-variables.yaml
+  template: ../variables/azure-global-variables.yaml
 
 jobs:
   - deployment: '${{ parameters.serviceName }}_infrastructure_${{ parameters.environmentName }}_${{ parameters.regionAbrv }}'
