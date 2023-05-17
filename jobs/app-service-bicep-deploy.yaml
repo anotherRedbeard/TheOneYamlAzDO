@@ -17,6 +17,8 @@ parameters:
   type: string
 - name: appServiceDeploymentName
   type: string
+- name: appContainerImageName
+  type: string
 
 jobs:
   - deployment: '${{ parameters.serviceName }}_infrastructure_${{ parameters.environmentName }}_${{ parameters.regionAbrv }}'
@@ -51,6 +53,6 @@ jobs:
                 templateFileName: '$(Build.SourcesDirectory)/${{ parameters.templateDirectory }}/${{ parameters.templateFileName }}.bicep'
                 parametersFileName: '$(Build.SourcesDirectory)/${{ parameters.templateDirectory }}/parameters/${{ parameters.environmentName }}.${{ parameters.regionAbrv }}.${{ parameters.templateFileName }}.parameters.json'
                 command: 'create'
-                additionalArguments: 'app_service_deployment_name=${{ parameters.appServiceDeploymentName }} --out yamlc'
+                additionalArguments: 'app_container_image_name=${{ parameters.appContainerImageName }} app_service_deployment_name=${{ parameters.appServiceDeploymentName }} --out yamlc'
                 deploymentName: '${{ variables.deploymentName }}'
                 resourceGroupName: '${{ parameters.resourceGroupName }}'
