@@ -15,7 +15,7 @@ parameters:
   type: string
 - name: resourceGroupName
   type: string
-- name: deploymentName
+- name: appServiceDeploymentName
   type: string
 
 jobs:
@@ -51,6 +51,6 @@ jobs:
                 templateFileName: '$(Build.SourcesDirectory)/${{ parameters.templateDirectory }}/${{ parameters.templateFileName }}.bicep'
                 parametersFileName: '$(Build.SourcesDirectory)/${{ parameters.templateDirectory }}/parameters/${{ parameters.environmentName }}.${{ parameters.regionAbrv }}.${{ parameters.templateFileName }}.parameters.json'
                 command: 'create'
-                additionalArguments: 'app_service_deployment_name=${{ parameters.deploymentName }} --out yamlc'
+                additionalArguments: 'app_service_deployment_name=${{ parameters.appServiceDeploymentName }} --out yamlc'
                 deploymentName: '${{ variables.deploymentName }}'
                 resourceGroupName: '${{ parameters.resourceGroupName }}'
