@@ -23,6 +23,9 @@ jobs:
     displayName: 'Deploy ${{ parameters.serviceName }} code to ${{ parameters.environmentName }} in this region ${{ parameters.regionAbrv }}'
     environment: ${{ parameters.environmentName }}
     variables: 
+      #find a better way to store this variable
+      - name: deploymentName
+        value: '${{ parameters.serviceName }}_infrastructure_${{ parameters.environmentName }}_${{ parameters.regionAbrv }}'
       - template: ../variables/azure-global-variables.yaml
     pool:
       vmImage: ubuntu-latest
@@ -47,8 +50,8 @@ jobs:
                   scriptType: bash
                   scriptLocation: inlineScript
                   inlineScript: |
-                    echo "##vso[task.setvariable variable=APP_NAME]$(az deployment group show -g ${{ parameters.resourceGroupName }} -n ${{ parameters.appServiceDeploymentName }} --query properties.outputs.appName.value --out tsv)"
-                    echo "##vso[task.setvariable variable=APP_PLAN_NAME]$(az deployment group show -g ${{ parameters.resourceGroupName }} -n ${{ parameters.appServiceDeploymentName }} --query properties.outputs.aspName.value --out tsv)"
+                    echo "##vso[task.setvariable variable=APP_NAME]$(az deployment group show -g ${{ parameters.resourceGroupName }} -n ${{ variables.deploymentName }} --query properties.outputs.appName.value --out tsv)"
+                    echo "##vso[task.setvariable variable=APP_PLAN_NAME]$(az deployment group show -g ${{ parameters.resourceGroupName }} -n ${{ variables.deploymentName }} --query properties.outputs.aspName.value --out tsv)"
 
               - template: ../tasks/deploy-app-container-task.yaml
                 parameters:
