@@ -1,44 +1,67 @@
-parameters:
-- name: azureSubscriptionName
-  type: string
-  default: ''
-- name: appName
-  type: string
-  default: ''
-- name: containerImageName
-  type: string
-  default: 'mcr.microsoft.com/azuredocs/aci-helloworld'
-- name: regPassword
-  type: string
-  default: ''
-- name: regUrl
-  type: string
-  default: ''
-- name: regUsername
-  type: string
-  default: ''
-- name: CorsAllowedHosts
-  type: string
-  default: ''
+pipeline:
+  parameters:
+    - name: azureSubscriptionName
+      type: string
+      default: ''
+    - name: appName
+      type: string
+      default: ''
+    - name: containerImageName
+      type: string
+      default: 'mcr.microsoft.com/azuredocs/aci-helloworld'
+    - name: regPassword
+      type: string
+      default: ''
+    - name: regUrl
+      type: string
+      default: ''
+    - name: regUsername
+      type: string
+      default: ''
+    - name: CorsAllowedHosts
+      type: string
+      default: ''
 
 steps:
-- task: AzureWebAppContainer@1
-  displayName: 'Azure Web App on Container Deploy'
-  inputs:
-    azureSubscription: ${{ parameters.azureSubscriptionName }}
-    appName: ${{ parameters.appName }}
-    imageName: ${{ parameters.containerImageName }}
-    #best practice would be to use a Managed Identity instead of setting these ACR credentials here...this is just for an example of how
-    appSettings: |
-      - name: DOCKER_REGISTRY_SERVER_URL
-        value: ${{ parameters.regUrl }}
-      - name: DOCKER_REGISTRY_SERVER_USERNAME
-        value: ${{ parameters.regUsername }}
-      ${{ if ne(parameters.regPassword,'') }}
-      - name: DOCKER_REGISTRY_SERVER_PASSWORD
-        value: ${{ parameters.regPassword }}
-      ${{ endif }}
-      ${{ if ne(parameters.CorsAllowedHosts,'') }}
-      - name: CorsAllowedHosts
-        value: ${{ parameters.corsAllowedHosts }}
-      ${{ endif }}
+  - task: AzureWebAppContainer@1
+    displayName: 'Azure Web App on Container Deploy'
+    inputs:
+      azureSubscription: ${{ parameters.azureSubscriptionName }}
+      appName: ${{ parameters.appName }}
+      imageName: ${{ parameters.containerImageName }}
+
+  - ${{ if ne(parameters.regPassword,'') }}:
+    - task: AzureAppServiceSettings@1
+      displayName: 'Set Docker Registry Server Password'
+      inputs:
+        azureSubscription: ${{ parameters.azureSubscriptionName }}
+        appName: ${{ parameters.appName }}
+        appSettings: |
+          [
+            {
+              "name": "DOCKER_REGISTRY_SERVER_PASSWORD",
+              "value": "${{ parameters.regPassword }}"
+            },
+            {
+              "name": "DOCKER_REGISTRY_SERVER_URL",
+              "value": "${{ parameters.regUrl }}"
+            },
+            {
+              "name": "DOCKER_REGISTRY_SERVER_USERNAME",
+              "value": "${{ parameters.regUsername }}"
+            }
+          ]
+
+  - ${{ if ne(parameters.CorsAllowedHosts,'') }}:
+    - task: AzureAppServiceSettings@1
+      displayName: 'Set Cors Allowed Hosts'
+      inputs:
+        azureSubscription: ${{ parameters.azureSubscriptionName }}
+        appName: ${{ parameters.appName }}
+        appSettings: |
+          [
+            {
+              "name": "CorsAllowedHosts",
+              "value": "${{ parameters.CorsAllowedHosts }}"
+            }
+          ]
