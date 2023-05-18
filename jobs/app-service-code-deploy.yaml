@@ -13,8 +13,6 @@ parameters:
   type: string
 - name: acrResourceGroupName
   type: string
-- name: appServiceDeploymentName
-  type: string
 - name: appContainerImageName
   type: string
 
