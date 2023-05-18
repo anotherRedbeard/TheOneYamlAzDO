@@ -1,0 +1,65 @@
+parameters:
+- name: environmentName
+  type: string
+- name: templateFileName
+  type: string
+- name: templateDirectory
+  type: string
+- name: serviceName
+  type: string
+- name: regionAbrv
+  type: string
+- name: containerRegistryName
+  type: string
+- name: azureServiceConnection
+  type: string
+- name: resourceGroupName
+  type: string
+- name: acrResourceGroupName
+  type: string
+- name: appServiceDeploymentName
+  type: string
+- name: appContainerImageName
+  type: string
+
+jobs:
+  - deployment: '${{ parameters.serviceName }}_deploy_code_${{ parameters.environmentName }}_${{ parameters.regionAbrv }}'
+    displayName: 'Deploy ${{ parameters.serviceName }} code to ${{ parameters.environmentName }} in this region ${{ parameters.regionAbrv }}'
+    environment: ${{ parameters.environmentName }}
+    variables: 
+      - template: ../variables/azure-global-variables.yaml
+    pool:
+      vmImage: ubuntu-latest
+    strategy:
+      runOnce:
+          deploy:
+            steps:
+              - task: AzureCLI@2
+                displayName: Get Container Registry Credentials
+                inputs:
+                  azureSubscription: ${{ variables.azureServiceConnection }}
+                  scriptType: bash
+                  scriptLocation: inlineScript
+                  inlineScript: |
+                    echo "##vso[task.setvariable issecret=true;variable=ACR_USERNAME]$(az acr credential show -n ${{ parameters.containerRegistryName }} -g ${{ parameters.acrResourceGroupName }} --query username --out tsv)"
+                    echo "##vso[task.setvariable issecret=true;variable=ACR_PASSWORD]$(az acr credential show -n ${{ parameters.containerRegistryName }} -g ${{ parameters.acrResourceGroupName }} --query passwords[0].value --out tsv)"
+              
+              - task: AzureCLI@2
+                displayName: Get AppName
+                inputs:
+                  azureSubscription: ${{ variables.azureServiceConnection }}
+                  scriptType: bash
+                  scriptLocation: inlineScript
+                  inlineScript: |
+                    echo "##vso[task.setvariable variable=APP_NAME]$(az deployment group show -g ${{ parameters.resourceGroupName }} -n ${{ parameters.appServiceDeploymentName }} --query properties.outputs.appName.value --out tsv)"
+                    echo "##vso[task.setvariable variable=APP_PLAN_NAME]$(az deployment group show -g ${{ parameters.resourceGroupName }} -n ${{ parameters.appServiceDeploymentName }} --query properties.outputs.aspName.value --out tsv)"
+
+              - template: ../tasks/deploy-app-container-task.yaml
+                parameters:
+                  azureSubscriptionName: '${{ parameters.azureServiceConnection }}'
+                  appName: $(APP_NAME)
+                  containerImageName: '${{ parameters.appContainerImageName }}'
+                  regPassword: $(ACR_PASSWORD)
+                  regUrl: $(ACR_URL)
+                  regUsername: $(ACR_USERNAME)
+                  CorsAllowedHosts: '*'
