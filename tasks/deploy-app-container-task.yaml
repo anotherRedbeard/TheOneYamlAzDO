@@ -1,26 +1,25 @@
-pipeline:
-  parameters:
-    - name: azureSubscriptionName
-      type: string
-      default: ''
-    - name: appName
-      type: string
-      default: ''
-    - name: containerImageName
-      type: string
-      default: 'mcr.microsoft.com/azuredocs/aci-helloworld'
-    - name: regPassword
-      type: string
-      default: ''
-    - name: regUrl
-      type: string
-      default: ''
-    - name: regUsername
-      type: string
-      default: ''
-    - name: CorsAllowedHosts
-      type: string
-      default: ''
+parameters:
+  - name: azureSubscriptionName
+    type: string
+    default: ''
+  - name: appName
+    type: string
+    default: ''
+  - name: containerImageName
+    type: string
+    default: 'mcr.microsoft.com/azuredocs/aci-helloworld'
+  - name: regPassword
+    type: string
+    default: ''
+  - name: regUrl
+    type: string
+    default: ''
+  - name: regUsername
+    type: string
+    default: ''
+  - name: CorsAllowedHosts
+    type: string
+    default: ''
 
 steps:
   - task: AzureWebAppContainer@1
