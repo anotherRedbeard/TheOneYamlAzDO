@@ -27,7 +27,7 @@ steps:
   inputs:
     azureSubscription: ${{ parameters.azureSubscriptionName }}
     appName: ${{ parameters.appName }}
-    imageName: ${{ parameters.imageName }}
+    imageName: ${{ parameters.containerImageName }}
     #best practice would be to use a Managed Identity instead of setting these ACR credentials here...this is just for an example of how
     appSettings: |
       $(( if ne(parameters.regPassword,'') }}- name: DOCKER_REGISTRY_SERVER_PASSWORD
