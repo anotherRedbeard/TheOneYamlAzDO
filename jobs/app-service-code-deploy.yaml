@@ -44,7 +44,7 @@ jobs:
               - task: AzureCLI@2
                 displayName: Get AppName
                 inputs:
-                  azureSubscription: ${{ variables.azureServiceConnection }}
+                  azureSubscription: ${{ parameters.azureServiceConnection }}
                   scriptType: bash
                   scriptLocation: inlineScript
                   inlineScript: |
