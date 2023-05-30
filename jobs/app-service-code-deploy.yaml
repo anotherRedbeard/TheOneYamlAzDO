@@ -34,7 +34,7 @@ jobs:
               - task: AzureCLI@2
                 displayName: Get Container Registry Credentials
                 inputs:
-                  azureSubscription: ${{ variables.azureServiceConnection }}
+                  azureSubscription: ${{ parameters.azureServiceConnection }}
                   scriptType: bash
                   scriptLocation: inlineScript
                   inlineScript: |
