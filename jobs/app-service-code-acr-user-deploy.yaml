@@ -57,6 +57,6 @@ jobs:
                   appName: $(APP_NAME)
                   containerImageName: '${{ parameters.appContainerImageName }}'
                   regPassword: $(ACR_PASSWORD)
-                  regUrl: $(ACR_URL)
+                  regUrl: '${{ parameters.containerRegistryName }}.azurecr.io'
                   regUsername: $(ACR_USERNAME)
                   CorsAllowedHosts: '*'

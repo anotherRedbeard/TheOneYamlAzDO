@@ -46,5 +46,5 @@ jobs:
                   azureSubscriptionName: '${{ parameters.azureServiceConnection }}'
                   appName: $(APP_NAME)
                   containerImageName: '${{ parameters.appContainerImageName }}'
-                  regUrl: $(ACR_URL)
+                  regUrl: '${{ parameters.containerRegistryName }}.azurecr.io'
                   CorsAllowedHosts: '*'
